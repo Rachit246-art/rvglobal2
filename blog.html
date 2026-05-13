@@ -272,17 +272,7 @@
         </div>
     </section>
 
-    <!-- Category Filter -->
-    <section class="py-12 bg-white border-b border-gray-100 sticky top-[84px] z-30 shadow-sm">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-wrap gap-4 justify-center" id="blog-categories">
-                <button class="category-btn active bg-accent text-white px-10 py-4 rounded-none font-bold uppercase tracking-widest text-[11px] transition-all border border-accent shadow-md" data-category="all">ALL</button>
-                <button class="category-btn bg-white text-gray-500 px-10 py-4 rounded-none font-bold uppercase tracking-widest text-[11px] transition-all border border-gray-100 hover:border-accent hover:text-accent" data-category="Private Jet">PRIVATE JET</button>
-                <button class="category-btn bg-white text-gray-500 px-10 py-4 rounded-none font-bold uppercase tracking-widest text-[11px] transition-all border border-gray-100 hover:border-accent hover:text-accent" data-category="Cargo">CARGO</button>
-                <button class="category-btn bg-white text-gray-500 px-10 py-4 rounded-none font-bold uppercase tracking-widest text-[11px] transition-all border border-gray-100 hover:border-accent hover:text-accent" data-category="Destinations">DESTINATIONS</button>
-            </div>
-        </div>
-    </section>
+
 
     <!-- Articles Grid -->
     <section class="py-24 bg-gradient-to-b from-white to-[#F8FAFC]">
@@ -447,17 +437,14 @@
 
         function filterBlogs() {
             const term = searchInput.value.toLowerCase();
-            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
 
             blogItems.forEach(item => {
                 const title = item.querySelector('h3').innerText.toLowerCase();
                 const content = item.querySelector('p').innerText.toLowerCase();
-                const category = item.getAttribute('data-category');
 
                 const matchesSearch = title.includes(term) || content.includes(term);
-                const matchesCategory = activeCategory === 'all' || category === activeCategory;
 
-                if (matchesSearch && matchesCategory) {
+                if (matchesSearch) {
                     item.style.display = 'flex';
                 } else {
                     item.style.display = 'none';
@@ -466,18 +453,6 @@
         }
 
         searchInput?.addEventListener('input', filterBlogs);
-
-        categoryBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                categoryBtns.forEach(b => {
-                    b.classList.remove('active');
-                    b.classList.add('bg-gray-50', 'text-gray-500');
-                });
-                btn.classList.add('active');
-                btn.classList.remove('bg-gray-50', 'text-gray-500');
-                filterBlogs();
-            });
-        });
     </script>
 </body>
 </html>
