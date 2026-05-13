@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --primary: #586A79;
+    --accent: #53B4E6;
+    --background: #FFFFFF;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--primary);
+    background-color: var(--background);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+/* Animations */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1s ease-out;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Transitions */
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+/* Header */
+header.scrolled {
+    background: white;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Custom Utilities */
+.tracking-widest {
+    letter-spacing: 0.2em;
+}
+
+.tracking-wider {
+    letter-spacing: 0.1em;
+}
+
+.line-clamp-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+
+/* Mobile Menu Drawer */
+#mobile-menu-drawer {
+    z-index: 1000;
+}
+
+#mobile-menu-content {
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+}
+
+#mobile-menu-backdrop {
+    backdrop-filter: blur(4px);
+}
+
+/* Custom Scrollbar for Mobile Menu */
+#mobile-menu-content .overflow-y-auto::-webkit-scrollbar {
+    width: 4px;
+}
+
+#mobile-menu-content .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
