@@ -82,3 +82,21 @@ header.scrolled {
     background: #e2e8f0;
     border-radius: 10px;
 }
+
+/* Premium background styling for slider background images */
+.slide {
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center 85% !important; /* Default for all slides */
+}
+
+/* Slide 2 has the cockpit on the right, shift horizontal alignment to 65% to center the cockpit beautifully */
+.slide:nth-child(2) {
+    background-position: 65% 85% !important;
+}
+
+@media (min-width: 768px) {
+    .slide, .slide:nth-child(2) {
+        background-position: center center !important; /* Centered on desktop */
+    }
+}
