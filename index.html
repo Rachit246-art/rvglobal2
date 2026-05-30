@@ -271,6 +271,19 @@
                 <!-- Form Body -->
                 <form class="p-6 space-y-4">
                     <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2 space-y-1">
+                            <label class="text-xs text-gray-500 font-medium">Full Name</label>
+                            <input type="text" id="user-name" placeholder="John Doe" class="w-full border border-gray-300 rounded-none py-2 px-3 focus:outline-none focus:border-accent text-sm text-gray-700 bg-white" required>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs text-gray-500 font-medium">Email Address</label>
+                            <input type="email" id="user-email" placeholder="john@example.com" class="w-full border border-gray-300 rounded-none py-2 px-3 focus:outline-none focus:border-accent text-sm text-gray-700 bg-white" required>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs text-gray-500 font-medium">Mobile Number</label>
+                            <input type="tel" id="user-mobile" placeholder="+1 234 567 8900" class="w-full border border-gray-300 rounded-none py-2 px-3 focus:outline-none focus:border-accent text-sm text-gray-700 bg-white" required>
+                        </div>
+                        
                         <!-- Custom Departure Dropdown -->
                         <div class="space-y-1 relative" id="departure-container">
                             <label class="text-xs text-gray-500 font-medium">Departure</label>

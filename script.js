@@ -185,6 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const tripType = isCargoActive ? 'Cargo' : 'Passenger';
 
             // Get field values
+            const name           = document.getElementById('user-name')?.value || 'Not provided';
+            const email          = document.getElementById('user-email')?.value || 'Not provided';
+            const mobile         = document.getElementById('user-mobile')?.value || 'Not provided';
             const departure      = document.getElementById('departure-value')?.value   || document.querySelector('#departure-display span')?.innerText  || 'Not specified';
             const destination    = document.getElementById('destination-value')?.value || document.querySelector('#destination-display span')?.innerText || 'Not specified';
             const dateInput      = heroForm.querySelector('input[type="date"]');
@@ -199,12 +202,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Prepare form data for FormSubmit
             const formData = new FormData();
+            formData.append('Name', name);
+            formData.append('Email', email);
+            formData.append('Mobile', mobile);
             formData.append('Trip Type', tripType);
             formData.append('Departure', departure);
             formData.append('Destination', destination);
             formData.append('Date', date);
             formData.append(label, passengers);
-            formData.append('_subject', `New Charter Inquiry: ${tripType} | ${departure} to ${destination}`);
+            formData.append('_subject', `New Charter Inquiry from ${name}`);
+            formData.append('_replyto', email); // Sets the "Reply-To" to the user's email
             formData.append('_captcha', 'false'); // Disable captcha
             formData.append('_cc', 'Rvglcorp@gmail.com'); // Add CC email
 
