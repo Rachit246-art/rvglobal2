@@ -169,50 +169,83 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // INQUIRE NOW — Open Gmail with all details
+    // INQUIRE NOW — Send email via FormSubmit (No setup required!)
     // ==========================================
+
     const heroForm = document.querySelector('.p-6.space-y-4');
     if (heroForm) {
         heroForm.addEventListener('submit', (e) => {
             e.preventDefault();
+
+            const submitBtn = heroForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
 
             // Determine active tab (Passenger or Cargo)
             const isCargoActive = heroTabCargo?.classList.contains('bg-accent');
             const tripType = isCargoActive ? 'Cargo' : 'Passenger';
 
             // Get field values
-            const departure   = document.getElementById('departure-value')?.value   || document.querySelector('#departure-display span')?.innerText  || '';
-            const destination = document.getElementById('destination-value')?.value || document.querySelector('#destination-display span')?.innerText || '';
-            const dateInput   = heroForm.querySelector('input[type="date"]');
-            const date        = dateInput ? dateInput.value : '';
+            const departure      = document.getElementById('departure-value')?.value   || document.querySelector('#departure-display span')?.innerText  || 'Not specified';
+            const destination    = document.getElementById('destination-value')?.value || document.querySelector('#destination-display span')?.innerText || 'Not specified';
+            const dateInput      = heroForm.querySelector('input[type="date"]');
+            const date           = (dateInput && dateInput.value) ? dateInput.value : 'Not specified';
             const passengerInput = heroForm.querySelector('input[type="number"]');
-            const passengers  = passengerInput ? passengerInput.value : '';
-            const label       = noPassengersLabel ? noPassengersLabel.textContent : 'Passengers';
+            const passengers     = (passengerInput && passengerInput.value) ? passengerInput.value : 'Not specified';
+            const label          = noPassengersLabel ? noPassengersLabel.textContent : 'Passengers';
 
-            // Build email body
-            const body = [
-                'Dear RV Global Aviation Team,',
-                '',
-                'I would like to make a charter inquiry. Please find the details below:',
-                '',
-                `  Trip Type   : ${tripType}`,
-                `  Departure   : ${departure  || 'Not specified'}`,
-                `  Destination : ${destination || 'Not specified'}`,
-                `  Date        : ${date        || 'Not specified'}`,
-                `  ${label}   : ${passengers  || 'Not specified'}`,
-                '',
-                'Please get back to me at your earliest convenience.',
-                '',
-                'Thank you.'
-            ].join('\n');
+            // Loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'SENDING...';
 
-            const subject = `Charter Inquiry — ${tripType} | ${departure} → ${destination}`;
+            // Prepare form data for FormSubmit
+            const formData = new FormData();
+            formData.append('Trip Type', tripType);
+            formData.append('Departure', departure);
+            formData.append('Destination', destination);
+            formData.append('Date', date);
+            formData.append(label, passengers);
+            formData.append('_subject', `New Charter Inquiry: ${tripType} | ${departure} to ${destination}`);
+            formData.append('_captcha', 'false'); // Disable captcha
+            formData.append('_cc', 'Rvglcorp@gmail.com'); // Add CC email
 
-            // Compose mailto targeting both addresses
-            const to = 'info@rvglobalaviation.com,Rvglcorp@gmail.com';
-            const mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-            window.open(mailtoUrl, '_blank');
+            // Send via FormSubmit AJAX endpoint (Main email is the endpoint)
+            fetch('https://formsubmit.co/ajax/info@rvglobalaviation.com', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    submitBtn.textContent = '✓ SENT SUCCESSFULLY!';
+                    submitBtn.classList.add('bg-green-600');
+                    submitBtn.classList.remove('bg-accent');
+                    heroForm.reset();
+                    // Reset custom dropdowns display text
+                    const depSpan = document.querySelector('#departure-display span');
+                    const destSpan = document.querySelector('#destination-display span');
+                    if (depSpan)  depSpan.innerText  = 'Select City';
+                    if (destSpan) destSpan.innerText = 'Select City';
+                } else {
+                    throw new Error('FormSubmit error');
+                }
+            })
+            .catch((err) => {
+                console.error('Submission error:', err);
+                submitBtn.textContent = '✗ FAILED — Try Again';
+                submitBtn.classList.add('bg-red-600');
+                submitBtn.classList.remove('bg-accent');
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                    submitBtn.classList.remove('bg-green-600', 'bg-red-600');
+                    submitBtn.classList.add('bg-accent');
+                }, 4000);
+            });
         });
     }
 
