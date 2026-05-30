@@ -271,17 +271,44 @@
                 <!-- Form Body -->
                 <form class="p-6 space-y-4">
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-1">
+                        <!-- Custom Departure Dropdown -->
+                        <div class="space-y-1 relative" id="departure-container">
                             <label class="text-xs text-gray-500 font-medium">Departure</label>
-                            <input type="text" placeholder="City or Airport" class="w-full border border-gray-300 rounded-none py-2 px-3 focus:outline-none focus:border-accent text-sm">
+                            <div class="w-full border border-gray-300 py-2 px-3 text-sm text-gray-700 bg-white cursor-pointer flex justify-between items-center" id="departure-display">
+                                <span class="truncate">Select City</span>
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                            <div class="absolute z-50 w-full mt-1 bg-white border border-gray-300 shadow-xl hidden max-h-64 overflow-y-auto" id="departure-menu">
+                                <div class="p-2 border-b border-gray-200 sticky top-0 bg-white">
+                                    <input type="text" placeholder="Search..." class="w-full text-sm border border-gray-300 px-2 py-1 focus:outline-none focus:border-accent" id="departure-search">
+                                </div>
+                                <ul id="departure-list" class="text-sm py-1">
+                                    <li class="px-3 py-2 text-center text-gray-500">Loading...</li>
+                                </ul>
+                            </div>
+                            <input type="hidden" name="departure" id="departure-value">
                         </div>
-                        <div class="space-y-1">
+                        
+                        <!-- Custom Destination Dropdown -->
+                        <div class="space-y-1 relative" id="destination-container">
                             <label class="text-xs text-gray-500 font-medium">Destination</label>
-                            <input type="text" placeholder="City or Airport" class="w-full border border-gray-300 rounded-none py-2 px-3 focus:outline-none focus:border-accent text-sm">
+                            <div class="w-full border border-gray-300 py-2 px-3 text-sm text-gray-700 bg-white cursor-pointer flex justify-between items-center" id="destination-display">
+                                <span class="truncate">Select City</span>
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                            <div class="absolute z-50 w-full mt-1 bg-white border border-gray-300 shadow-xl hidden max-h-64 overflow-y-auto" id="destination-menu">
+                                <div class="p-2 border-b border-gray-200 sticky top-0 bg-white">
+                                    <input type="text" placeholder="Search..." class="w-full text-sm border border-gray-300 px-2 py-1 focus:outline-none focus:border-accent" id="destination-search">
+                                </div>
+                                <ul id="destination-list" class="text-sm py-1">
+                                    <li class="px-3 py-2 text-center text-gray-500">Loading...</li>
+                                </ul>
+                            </div>
+                            <input type="hidden" name="destination" id="destination-value">
                         </div>
                         <div class="space-y-1">
                             <label class="text-xs text-gray-500 font-medium">Date</label>
-                            <input type="text" placeholder="DD-MM-YYYY" class="w-full border border-gray-300 rounded-none py-2 px-3 focus:outline-none focus:border-accent text-sm">
+                            <input type="date" class="w-full border border-gray-300 rounded-none py-2 px-3 focus:outline-none focus:border-accent text-sm text-gray-700 bg-white">
                         </div>
                         <div class="space-y-1">
                             <label id="no-passengers-label" class="text-xs text-gray-500 font-medium">No. passengers</label>
@@ -676,6 +703,140 @@
         </div>
     </footer>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let countryData = [];
+
+            // Fetch countries and their cities
+            fetch('https://countriesnow.space/api/v0.1/countries')
+                .then(response => response.json())
+                .then(data => {
+                    if(!data || !data.data) return;
+                    // Sort countries alphabetically
+                    countryData = data.data.sort((a, b) => a.country.localeCompare(b.country));
+                    
+                    initCustomDropdown('departure');
+                    initCustomDropdown('destination');
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+
+            function initCustomDropdown(prefix) {
+                const container = document.getElementById(`${prefix}-container`);
+                const display = document.getElementById(`${prefix}-display`);
+                const menu = document.getElementById(`${prefix}-menu`);
+                const list = document.getElementById(`${prefix}-list`);
+                const search = document.getElementById(`${prefix}-search`);
+                const hiddenInput = document.getElementById(`${prefix}-value`);
+                const displaySpan = display.querySelector('span');
+                
+                let currentView = 'countries'; // 'countries' or 'cities'
+                let selectedCountryInfo = null;
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!container.contains(e.target)) {
+                        menu.classList.add('hidden');
+                    }
+                });
+
+                display.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    menu.classList.toggle('hidden');
+                    if (!menu.classList.contains('hidden')) {
+                        search.value = '';
+                        renderCountries();
+                        search.focus();
+                    }
+                });
+
+                search.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+
+                search.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    if (currentView === 'countries') {
+                        renderCountries(term);
+                    } else if (currentView === 'cities') {
+                        renderCities(selectedCountryInfo, term);
+                    }
+                });
+
+                function renderCountries(filter = '') {
+                    currentView = 'countries';
+                    list.innerHTML = '';
+                    const filtered = countryData.filter(c => c.country.toLowerCase().includes(filter));
+                    
+                    if (filtered.length === 0) {
+                        list.innerHTML = '<li class="px-3 py-2 text-center text-gray-500">No countries found</li>';
+                        return;
+                    }
+
+                    filtered.forEach(c => {
+                        const li = document.createElement('li');
+                        li.className = 'px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 transition-colors flex justify-between items-center';
+                        li.innerHTML = `<span>${c.country}</span><span class="text-gray-400 text-xs">►</span>`;
+                        li.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            selectedCountryInfo = c;
+                            search.value = '';
+                            renderCities(c);
+                            search.focus();
+                        });
+                        list.appendChild(li);
+                    });
+                }
+
+                function renderCities(countryInfo, filter = '') {
+                    currentView = 'cities';
+                    list.innerHTML = '';
+                    
+                    // Back button
+                    const backLi = document.createElement('li');
+                    backLi.className = 'px-3 py-2 bg-gray-50 hover:bg-gray-200 cursor-pointer text-accent font-medium border-b border-gray-200 flex items-center gap-2';
+                    backLi.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Back to Countries`;
+                    backLi.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        search.value = '';
+                        renderCountries();
+                        search.focus();
+                    });
+                    list.appendChild(backLi);
+
+                    let cities = [...new Set(countryInfo.cities)];
+                    cities.sort((a, b) => a.localeCompare(b));
+                    
+                    const filtered = cities.filter(c => c.toLowerCase().includes(filter));
+
+                    if (filtered.length === 0) {
+                        const emptyLi = document.createElement('li');
+                        emptyLi.className = 'px-3 py-2 text-center text-gray-500';
+                        emptyLi.innerText = 'No cities found';
+                        list.appendChild(emptyLi);
+                        return;
+                    }
+
+                    filtered.forEach(city => {
+                        if(city.trim()) {
+                            const li = document.createElement('li');
+                            li.className = 'px-3 py-2 hover:bg-accent hover:text-white cursor-pointer transition-colors';
+                            li.innerText = city;
+                            li.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                const val = `${city}, ${countryInfo.country}`;
+                                displaySpan.innerText = val;
+                                hiddenInput.value = val;
+                                menu.classList.add('hidden');
+                            });
+                            list.appendChild(li);
+                        }
+                    });
+                }
+            }
+        });
+    </script>
     <script src="script.js"></script>
 </body>
 </html>

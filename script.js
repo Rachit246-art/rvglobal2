@@ -168,6 +168,54 @@ document.addEventListener('DOMContentLoaded', () => {
         if (noPassengersLabel) noPassengersLabel.textContent = 'Weight (kg)';
     });
 
+    // ==========================================
+    // INQUIRE NOW — Open Gmail with all details
+    // ==========================================
+    const heroForm = document.querySelector('.p-6.space-y-4');
+    if (heroForm) {
+        heroForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Determine active tab (Passenger or Cargo)
+            const isCargoActive = heroTabCargo?.classList.contains('bg-accent');
+            const tripType = isCargoActive ? 'Cargo' : 'Passenger';
+
+            // Get field values
+            const departure   = document.getElementById('departure-value')?.value   || document.querySelector('#departure-display span')?.innerText  || '';
+            const destination = document.getElementById('destination-value')?.value || document.querySelector('#destination-display span')?.innerText || '';
+            const dateInput   = heroForm.querySelector('input[type="date"]');
+            const date        = dateInput ? dateInput.value : '';
+            const passengerInput = heroForm.querySelector('input[type="number"]');
+            const passengers  = passengerInput ? passengerInput.value : '';
+            const label       = noPassengersLabel ? noPassengersLabel.textContent : 'Passengers';
+
+            // Build email body
+            const body = [
+                'Dear RV Global Aviation Team,',
+                '',
+                'I would like to make a charter inquiry. Please find the details below:',
+                '',
+                `  Trip Type   : ${tripType}`,
+                `  Departure   : ${departure  || 'Not specified'}`,
+                `  Destination : ${destination || 'Not specified'}`,
+                `  Date        : ${date        || 'Not specified'}`,
+                `  ${label}   : ${passengers  || 'Not specified'}`,
+                '',
+                'Please get back to me at your earliest convenience.',
+                '',
+                'Thank you.'
+            ].join('\n');
+
+            const subject = `Charter Inquiry — ${tripType} | ${departure} → ${destination}`;
+
+            // Compose mailto targeting both addresses
+            const to = 'info@rvglobalaviation.com,Rvglcorp@gmail.com';
+            const mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            window.open(mailtoUrl, '_blank');
+        });
+    }
+
     // Content Tabs logic (Jets vs Destinations)
     const tabJets = document.getElementById('tab-jets');
     const tabDestinations = document.getElementById('tab-destinations');
