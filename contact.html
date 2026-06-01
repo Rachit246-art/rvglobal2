@@ -307,7 +307,7 @@
                         </div>
                     </div>
 
-                    <form id="contact-form" class="space-y-8">
+                    <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-8">
                         <!-- Web3Forms hidden fields -->
                         <input type="hidden" name="access_key" value="fecfeff8-899f-477f-b212-7064496e95ee">
                         <input type="hidden" name="subject" value="New Contact Inquiry — RV Global Aviation">
@@ -435,57 +435,5 @@
     </footer>
 
     <script src="script.js"></script>
-    <script>
-        // ── Contact Page Form — Web3Forms ──────────────────────────────
-        const contactForm = document.getElementById('contact-form');
-        const contactSubmitBtn = document.getElementById('contact-submit-btn');
-        const contactSuccess = document.getElementById('contact-success');
-        const contactError = document.getElementById('contact-error');
-
-        if (contactForm) {
-            contactForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                const originalText = contactSubmitBtn.textContent;
-                contactSubmitBtn.disabled = true;
-                contactSubmitBtn.textContent = 'SENDING...';
-                contactSuccess.classList.add('hidden');
-                contactError.classList.add('hidden');
-
-                const formData = new FormData(contactForm);
-                const data = Object.fromEntries(formData);
-
-                try {
-                    const res = await fetch('https://api.web3forms.com/submit', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
-                    const json = await res.json();
-
-                    if (json.success) {
-                        contactSuccess.classList.remove('hidden');
-                        contactForm.reset();
-                        contactSubmitBtn.textContent = '✓ MESSAGE SENT!';
-                        contactSubmitBtn.classList.add('bg-green-600');
-                        contactSubmitBtn.classList.remove('bg-accent');
-                        setTimeout(() => {
-                            contactSubmitBtn.disabled = false;
-                            contactSubmitBtn.textContent = originalText;
-                            contactSubmitBtn.classList.remove('bg-green-600');
-                            contactSubmitBtn.classList.add('bg-accent');
-                            contactSuccess.classList.add('hidden');
-                        }, 5000);
-                    } else {
-                        throw new Error(json.message || 'Submission failed');
-                    }
-                } catch {
-                    contactError.classList.remove('hidden');
-                    contactSubmitBtn.disabled = false;
-                    contactSubmitBtn.textContent = originalText;
-                }
-            });
-        }
-    </script>
 </body>
 </html>
