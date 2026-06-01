@@ -200,56 +200,71 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
             submitBtn.textContent = 'SENDING...';
 
-            // Prepare form data for FormSubmit
-            const formData = new FormData();
-            formData.append('Name', name);
-            formData.append('Email', email);
-            formData.append('Mobile', mobile);
-            formData.append('Trip Type', tripType);
-            formData.append('Departure', departure);
-            formData.append('Destination', destination);
-            formData.append('Date', date);
-            formData.append(label, passengers);
-            formData.append('_subject', `New Charter Inquiry from ${name}`);
-            formData.append('_replyto', email); // Sets the "Reply-To" to the user's email
-            formData.append('_captcha', 'false'); // Disable captcha
-            formData.append('_cc', 'Rvglcorp@gmail.com'); // Add CC email
+            // Build message body
+            const message = `
+New Charter Inquiry — ${tripType}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Name        : ${name}
+Email       : ${email}
+Mobile      : ${mobile}
+Trip Type   : ${tripType}
+Departure   : ${departure}
+Destination : ${destination}
+Date        : ${date}
+${label}    : ${passengers}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            `.trim();
 
-            // Send via FormSubmit AJAX endpoint (Main email is the endpoint)
-            fetch('https://formsubmit.co/ajax/info@rvglobalaviation.com', {
+            // Send via Web3Forms
+            fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json'
-                },
-                body: formData
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    access_key: 'fecfeff8-899f-477f-b212-7064496e95ee',
+                    subject: `New ${tripType} Charter Inquiry — RV Global Aviation`,
+                    from_name: name,
+                    email: email,
+                    message: message,
+                    botcheck: ''
+                })
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 if (data.success) {
                     submitBtn.textContent = '✓ SENT SUCCESSFULLY!';
                     submitBtn.classList.add('bg-green-600');
                     submitBtn.classList.remove('bg-accent');
+
+                    const successMsg = document.getElementById('form-success-message');
+                    if (successMsg) successMsg.classList.remove('hidden');
+
                     heroForm.reset();
+
                     // Reset custom dropdowns display text
                     const depSpan = document.querySelector('#departure-display span');
                     const destSpan = document.querySelector('#destination-display span');
                     if (depSpan)  depSpan.innerText  = 'Select City';
                     if (destSpan) destSpan.innerText = 'Select City';
+
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                        submitBtn.classList.remove('bg-green-600');
+                        submitBtn.classList.add('bg-accent');
+                        if (successMsg) successMsg.classList.add('hidden');
+                    }, 4000);
                 } else {
-                    throw new Error('FormSubmit error');
+                    throw new Error(data.message || 'Submission failed');
                 }
             })
-            .catch((err) => {
-                console.error('Submission error:', err);
-                submitBtn.textContent = '✗ FAILED — Try Again';
+            .catch(() => {
+                submitBtn.textContent = '✗ ERROR — TRY AGAIN';
                 submitBtn.classList.add('bg-red-600');
                 submitBtn.classList.remove('bg-accent');
-            })
-            .finally(() => {
                 setTimeout(() => {
                     submitBtn.disabled = false;
                     submitBtn.textContent = originalText;
-                    submitBtn.classList.remove('bg-green-600', 'bg-red-600');
+                    submitBtn.classList.remove('bg-red-600');
                     submitBtn.classList.add('bg-accent');
                 }, 4000);
             });

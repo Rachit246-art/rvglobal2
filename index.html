@@ -260,12 +260,39 @@
             <div class="absolute inset-0 bg-black/40"></div>
         </div>
 
-        <div class="relative z-10 container mx-auto px-4 md:px-8 lg:px-12">
-            <div class="max-w-[450px] bg-white shadow-2xl reveal visible translate-y-0 opacity-100">
+        <!-- Form removed and moved below -->
+        
+        <!-- Slider Navigation -->
+        <button id="prev-slide" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/30 hover:bg-white/50 text-white p-2 rounded-full transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <button id="next-slide" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/30 hover:bg-white/50 text-white p-2 rounded-full transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+
+        <div id="slider-dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+            <button class="dot w-8 h-2 rounded-full bg-white transition-all" data-index="0"></button>
+            <button class="dot w-2 h-2 rounded-full bg-white/50 transition-all" data-index="1"></button>
+            <button class="dot w-2 h-2 rounded-full bg-white/50 transition-all" data-index="2"></button>
+        </div>
+    </section>
+
+    <!-- Inquiry Form Section -->
+    <section class="py-12 bg-white flex justify-center">
+        <div class="container mx-auto px-4 md:px-8 lg:px-12 flex justify-center">
+            <div class="w-full max-w-[600px] bg-white shadow-2xl reveal visible translate-y-0 opacity-100 border border-gray-100 rounded-xl overflow-hidden">
                 <!-- Form Tabs -->
                 <div class="flex w-full">
                     <button id="hero-tab-passenger" class="flex-1 py-4 text-sm font-bold tracking-wider transition-colors bg-accent text-white uppercase">PASSENGER</button>
                     <button id="hero-tab-cargo" class="flex-1 py-4 text-sm font-bold tracking-wider transition-colors bg-accent text-white hover:bg-accent/90 uppercase">CARGO</button>
+                </div>
+
+                <!-- Success Message -->
+                <div id="form-success-message" class="hidden bg-green-50 border-l-4 border-green-500 p-4 mx-6 mt-6 mb-[-10px] rounded-r transition-all duration-500">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        <p class="text-sm text-green-700 font-medium">Your inquiry has been sent successfully. We will get back to you soon!</p>
+                    </div>
                 </div>
 
                 <!-- Form Body -->
@@ -331,20 +358,6 @@
                     <button type="submit" class="w-full bg-accent hover:bg-accent/90 text-white font-bold tracking-wider py-4 rounded-none mt-2 transition-transform hover:scale-[1.02] uppercase text-sm">INQUIRE NOW</button>
                 </form>
             </div>
-        </div>
-        
-        <!-- Slider Navigation -->
-        <button id="prev-slide" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/30 hover:bg-white/50 text-white p-2 rounded-full transition-all">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-        </button>
-        <button id="next-slide" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/30 hover:bg-white/50 text-white p-2 rounded-full transition-all">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </button>
-
-        <div id="slider-dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-            <button class="dot w-8 h-2 rounded-full bg-white transition-all" data-index="0"></button>
-            <button class="dot w-2 h-2 rounded-full bg-white/50 transition-all" data-index="1"></button>
-            <button class="dot w-2 h-2 rounded-full bg-white/50 transition-all" data-index="2"></button>
         </div>
     </section>
 

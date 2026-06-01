@@ -291,25 +291,47 @@
             <div class="max-w-4xl mx-auto">
                 <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-16 border border-gray-100 reveal">
                     <h2 class="text-3xl font-heading font-bold text-primary text-center mb-10 uppercase tracking-wide">Send Us a Message</h2>
+
+                    <!-- Success Message -->
+                    <div id="contact-success" class="hidden mb-8 bg-green-50 border-l-4 border-green-500 p-5 rounded-r-xl">
+                        <div class="flex items-center gap-3">
+                            <svg class="h-6 w-6 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <p class="text-green-700 font-medium">Your message has been sent successfully! We'll get back to you within 1 hour.</p>
+                        </div>
+                    </div>
+                    <!-- Error Message -->
+                    <div id="contact-error" class="hidden mb-8 bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
+                        <div class="flex items-center gap-3">
+                            <svg class="h-6 w-6 text-red-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                            <p class="text-red-700 font-medium">Something went wrong. Please try again or email us directly at info@rvglobalaviation.com</p>
+                        </div>
+                    </div>
+
                     <form id="contact-form" class="space-y-8">
+                        <!-- Web3Forms hidden fields -->
+                        <input type="hidden" name="access_key" value="fecfeff8-899f-477f-b212-7064496e95ee">
+                        <input type="hidden" name="subject" value="New Contact Inquiry — RV Global Aviation">
+                        <input type="hidden" name="from_name" value="RV Global Aviation Website">
+                        <input type="checkbox" name="botcheck" class="hidden" style="display:none">
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="space-y-2">
-                                <label class="text-sm font-bold text-primary uppercase tracking-widest">Full Name *</label>
-                                <input type="text" required class="w-full bg-gray-50 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-accent transition-all text-primary font-paragraph" placeholder="John Doe">
+                                <label for="contact-name" class="text-sm font-bold text-primary uppercase tracking-widest">Full Name *</label>
+                                <input id="contact-name" type="text" name="name" required class="w-full bg-gray-50 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-accent transition-all text-primary font-paragraph" placeholder="John Doe">
                             </div>
                             <div class="space-y-2">
-                                <label class="text-sm font-bold text-primary uppercase tracking-widest">Email Address *</label>
-                                <input type="email" required class="w-full bg-gray-50 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-accent transition-all text-primary font-paragraph" placeholder="john@example.com">
+                                <label for="contact-email" class="text-sm font-bold text-primary uppercase tracking-widest">Email Address *</label>
+                                <input id="contact-email" type="email" name="email" required class="w-full bg-gray-50 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-accent transition-all text-primary font-paragraph" placeholder="john@example.com">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="space-y-2">
-                                <label class="text-sm font-bold text-primary uppercase tracking-widest">Phone Number</label>
-                                <input type="tel" class="w-full bg-gray-50 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-accent transition-all text-primary font-paragraph" placeholder="+1 (555) 000-0000">
+                                <label for="contact-phone" class="text-sm font-bold text-primary uppercase tracking-widest">Phone Number</label>
+                                <input id="contact-phone" type="tel" name="phone" class="w-full bg-gray-50 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-accent transition-all text-primary font-paragraph" placeholder="+1 (555) 000-0000">
                             </div>
                             <div class="space-y-2">
-                                <label class="text-sm font-bold text-primary uppercase tracking-widest">Inquiry Type *</label>
-                                <select required class="w-full bg-gray-50 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-accent transition-all text-primary font-paragraph appearance-none">
+                                <label for="contact-inquiry" class="text-sm font-bold text-primary uppercase tracking-widest">Inquiry Type *</label>
+                                <select id="contact-inquiry" name="inquiry_type" required class="w-full bg-gray-50 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-accent transition-all text-primary font-paragraph appearance-none">
                                     <option value="">Select type</option>
                                     <option value="Private Jet Charter">Private Jet Charter</option>
                                     <option value="Group Charter Flights">Group Charter Flights</option>
@@ -320,10 +342,10 @@
                             </div>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-sm font-bold text-primary uppercase tracking-widest">Message *</label>
-                            <textarea required rows="6" class="w-full bg-gray-50 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-accent transition-all text-primary font-paragraph" placeholder="Tell us about your charter requirements..."></textarea>
+                            <label for="contact-message" class="text-sm font-bold text-primary uppercase tracking-widest">Message *</label>
+                            <textarea id="contact-message" name="message" required rows="6" class="w-full bg-gray-50 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-accent transition-all text-primary font-paragraph" placeholder="Tell us about your charter requirements..."></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-accent hover:bg-accent/90 text-white font-heading font-bold uppercase tracking-[0.3em] py-6 rounded-xl shadow-xl transition-all hover:scale-[1.01] active:scale-95">Send Inquiry</button>
+                        <button id="contact-submit-btn" type="submit" class="w-full bg-accent hover:bg-accent/90 text-white font-heading font-bold uppercase tracking-[0.3em] py-6 rounded-xl shadow-xl transition-all hover:scale-[1.01] active:scale-95">Send Inquiry</button>
                     </form>
                 </div>
             </div>
@@ -413,5 +435,57 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        // ── Contact Page Form — Web3Forms ──────────────────────────────
+        const contactForm = document.getElementById('contact-form');
+        const contactSubmitBtn = document.getElementById('contact-submit-btn');
+        const contactSuccess = document.getElementById('contact-success');
+        const contactError = document.getElementById('contact-error');
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const originalText = contactSubmitBtn.textContent;
+                contactSubmitBtn.disabled = true;
+                contactSubmitBtn.textContent = 'SENDING...';
+                contactSuccess.classList.add('hidden');
+                contactError.classList.add('hidden');
+
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData);
+
+                try {
+                    const res = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    const json = await res.json();
+
+                    if (json.success) {
+                        contactSuccess.classList.remove('hidden');
+                        contactForm.reset();
+                        contactSubmitBtn.textContent = '✓ MESSAGE SENT!';
+                        contactSubmitBtn.classList.add('bg-green-600');
+                        contactSubmitBtn.classList.remove('bg-accent');
+                        setTimeout(() => {
+                            contactSubmitBtn.disabled = false;
+                            contactSubmitBtn.textContent = originalText;
+                            contactSubmitBtn.classList.remove('bg-green-600');
+                            contactSubmitBtn.classList.add('bg-accent');
+                            contactSuccess.classList.add('hidden');
+                        }, 5000);
+                    } else {
+                        throw new Error(json.message || 'Submission failed');
+                    }
+                } catch {
+                    contactError.classList.remove('hidden');
+                    contactSubmitBtn.disabled = false;
+                    contactSubmitBtn.textContent = originalText;
+                }
+            });
+        }
+    </script>
 </body>
 </html>
